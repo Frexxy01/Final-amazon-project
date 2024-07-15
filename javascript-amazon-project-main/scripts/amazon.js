@@ -1,4 +1,4 @@
-import {cart, addtoCart} from '../data/cart.js'
+import {cart, addtoCart, calculateCartQuantity} from '../data/cart.js'
 import {products} from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
@@ -62,26 +62,18 @@ console.log(productsHTML);
 
 document.querySelector('.js-produts-grid').innerHTML = productsHTML;
 
-function updateCartQuantity(productId) {
-  let itemsInCart = 0;
-  cart.forEach((cartItem) => {
-    itemsInCart += cartItem.quantity
-  });
-  const addedCheckmartk = document.querySelector(`.js-added-to-cart-${productId}`);
-  addedCheckmartk.classList.add('added-to-cart-is-visible');
-  clearTimeout(timeoutID);
-  timeoutID = setTimeout(() => {
-    addedCheckmartk.classList.remove('added-to-cart-is-visible')}, 2000);
 
-  document.querySelector('.js-cart-quantity').innerHTML = itemsInCart;
-  console.log(cart);
+function updateCartQuantity() {
+  const cartQuantity =  calculateCartQuantity();
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
 }
+updateCartQuantity();
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
   button.addEventListener('click', () => {
     const {productId} = button.dataset;
     addtoCart(productId, cart);
-    updateCartQuantity(productId);
+    updateCartQuantity();
   });
 });
-
