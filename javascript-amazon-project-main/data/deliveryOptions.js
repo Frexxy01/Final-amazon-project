@@ -25,3 +25,15 @@ export function getDeliveryOption(deliveryOptionId) {
 
   return deliveryOption || deliveryOptions[0];
 };
+
+export function calculateDeliveryOption(deliveryOption, today) {
+  let deliveryDate = today;
+  let remainingDays = deliveryOption.deliveryDays;
+  while (remainingDays > 0) {
+    deliveryDate = deliveryDate.add(1, 'day');
+    if (deliveryDate.format('dddd') !== 'Saturday' && deliveryDate.format('dddd') !== 'Sunday') {
+      remainingDays--;
+    }
+  }
+  return deliveryDate;
+}

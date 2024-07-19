@@ -3,8 +3,10 @@ import { products, getProduct} from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import {deliveryOptions,getDeliveryOption} from '../../data/deliveryOptions.js'
+import {deliveryOptions,getDeliveryOption, calculateDeliveryOption} from '../../data/deliveryOptions.js'
 import { renderPaymentSummary } from "./paymentSummary.js";
+import {updateCartQuantity} from "./checkoutHeader.js";
+
 
 export function renderOrderSummary() {
 
@@ -24,10 +26,10 @@ export function renderOrderSummary() {
 
 
     const today = dayjs();
-    const deliveryDate = today.add(
-      deliveryOption.deliveryDays, 'days'
-    );
-    const dateString = deliveryDate.format(
+
+
+    const noWeekend = calculateDeliveryOption(deliveryOption, today);
+    const dateString = noWeekend.format(
       'dddd, MMMM D'
     );
 
@@ -81,9 +83,7 @@ export function renderOrderSummary() {
 
     deliveryOptions.forEach((deliveryOption) => {
       const today = dayjs();
-      const deliveryDate = today.add(
-        deliveryOption.deliveryDays, 'days'
-      );
+      const deliveryDate = calculateDeliveryOption(deliveryOption, today);
       const dateString = deliveryDate.format(
         'dddd, MMMM D'
       );
@@ -121,16 +121,11 @@ export function renderOrderSummary() {
     link.addEventListener('click', () => {
       const productID = link.dataset.productId;
       removeFromCart(productID);
-      
-      const container = document.querySelector(`.js-cart-item-container-${productID}`)
-      container.remove();
-      updateCartQuantity();
+      renderOrderSummary();
       renderPaymentSummary();
+      updateCartQuantity();
     });
   });
-  function updateCartQuantity() {
-    const cartQuantity = calculateCartQuantity();
-    document.querySelector('.js-return-to-home').innerHTML = `${cartQuantity} items`;}
 
   document.querySelectorAll('.js-update-quantity').forEach((link) => {
     const productID = link.dataset.productId;
@@ -159,10 +154,10 @@ export function renderOrderSummary() {
 
         updateQuantity(productId, finalSavedQuantity);
 
-        const container = document.querySelector(`.js-cart-item-container-${productId}`);
-        updateCartQuantity();
+        
+        renderOrderSummary();
         renderPaymentSummary();
-        container.classList.remove('is-editing-quantity');
+        
 
       } else {
         alert('Enter a valid quantity!') 
