@@ -48,7 +48,8 @@ products.forEach((product) => {
 
 
       ${product.extraInfoHTML()}
-
+      ${product.getWarranty()}
+      ${product.getInstructions()}
       
       <div class="product-spacer"></div>
 
