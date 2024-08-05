@@ -13,10 +13,11 @@ function renderYourOrders() {
 orders.forEach((order) => {
   let productsHTML = '';
   (order.products).forEach((product) => {
-    console.log('order')
+  
     let productId = product.productId
     let productDetails = getProduct(productId)
-    
+
+
     productsHTML += `
     <div class="product-image-container">
       <img src="${productDetails.image}">
@@ -30,7 +31,7 @@ orders.forEach((order) => {
         ${dayjs(product.estimatedDeliveryTime).format('MMMM D')}
       </div>
       <div class="product-quantity">
-        Quantity: 1
+        Quantity: ${product.quantity}
       </div>
       <button class="buy-again-button button-primary js-buy-again-button"
       data-product-id="${productDetails.id}">
