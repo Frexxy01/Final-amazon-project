@@ -1,4 +1,3 @@
-
 export let cart;
 
 loadFromStorage();
@@ -81,3 +80,20 @@ export function loadCart(fun) {
   xhr.send();
 
 };
+
+export async function loadCartFetch() {
+  const response = await fetch("https://supersimplebackend.dev/cart")
+  const text = await response.text()
+  console.log(text + " hey")
+}
+
+export function updateCartQuantity() {
+  let cartQuantity = 0;
+
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  document.querySelector('.js-cart-quantity')
+    .innerHTML = cartQuantity;
+}

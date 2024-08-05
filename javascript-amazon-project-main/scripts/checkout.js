@@ -4,20 +4,16 @@ import {renderPaymentSummary} from './checkout/paymentSummary.js';
 //import '../data/car.js'
 // import '../data/backend-practise.js';
 import { loadProducts, loadProductsFetch } from '../data/products.js' ;
-import {loadCart} from "../data/cart.js"
+import {loadCart, loadCartFetch} from "../data/cart.js"
 
 async function loadPage() {
   try {
-
-    await loadProductsFetch()
-
-  await new Promise((resolve, reject) => {
-    loadCart(() => {
-      // reject('error3');
-      resolve();
-    });
-  })
-  } catch (error) {
+    await Promise.all([
+      loadCartFetch(),
+      loadProductsFetch()
+  ])
+  }
+   catch (error) {
     console.log('Unexpected error. Please try again later.')
   }
   
@@ -26,6 +22,7 @@ async function loadPage() {
 
 }
 loadPage()
+
 
 
 
